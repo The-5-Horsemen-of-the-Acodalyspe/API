@@ -8,6 +8,9 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String)
     email = db.Column(db.String)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    age = db.Column(db.Integer)
 
     housing = db.relationship("Housing", backref="user", lazy="dynamic")
     study = db.relationship("Study", backref="user", lazy="dynamic")
