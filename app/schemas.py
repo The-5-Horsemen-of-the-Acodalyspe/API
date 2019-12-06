@@ -17,6 +17,11 @@ class TypeHousingSchema(ModelSchema):
         model = TypeHousing
 
 
+class TransportSchema(ModelSchema):
+    class Meta:
+        model = Transport
+
+
 class TypeTransportSchema(ModelSchema):
     class Meta:
         model = TypeTransport

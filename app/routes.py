@@ -227,6 +227,7 @@ def set_user(user, request):
                 abort(400, "Invalid university")
     percent_calc(user)
 
+
 @app.route("/api/register", methods=["POST"])
 def register():
     if not request.json or not all(key in request.json for key in ["username", "password", "email", "first_name", "last_name", "age"]):
@@ -246,7 +247,94 @@ def update_user():
     return jsonify(UserSchema().dump(current_identity))
 
 
-@app.route("/api/", methods=["GET"])
+@app.route("/api/user", methods=["GET"])
 @jwt_required()
-def root():
-    return "ok"
+def get_user():
+    return jsonify(UserSchema().dump(current_identity))
+
+
+@app.route("/api/housing", methods=["GET"])
+@jwt_required()
+def get_housing():
+    if current_identity.housing.count():
+        return jsonify(HousingSchema().dump(current_identity.housing[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/transport", methods=["GET"])
+@jwt_required()
+def get_transport():
+    if current_identity.transport.count():
+        return jsonify(TransportSchema().dump(current_identity.transport[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/study", methods=["GET"])
+@jwt_required()
+def get_study():
+    if current_identity.study.count():
+        return jsonify(StudySchema().dump(current_identity.study[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/technology", methods=["GET"])
+@jwt_required()
+def get_technology():
+    if current_identity.technology.count():
+        return jsonify(TechnologySchema().dump(current_identity.technology[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/finance", methods=["GET"])
+@jwt_required()
+def get_finance():
+    if current_identity.finance.count():
+        return jsonify(FinanceSchema().dump(current_identity.finance[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/handicap", methods=["GET"])
+@jwt_required()
+def get_handicap():
+    if current_identity.handicap.count():
+        return jsonify(HandicapSchema().dump(current_identity.handicap[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/family", methods=["GET"])
+@jwt_required()
+def get_family():
+    if current_identity.handicap.count():
+        return jsonify(FamilySchema().dump(current_identity.family[0]))
+    else:
+        return jsonify({})
+
+
+@app.route("/api/typehousing", methods=["GET"])
+@jwt_required()
+def get_typehousing():
+    return jsonify(TypeHousingSchema().dump(TypeHousing.query.all()))
+
+
+@app.route("/api/typetransport", methods=["GET"])
+@jwt_required()
+def get_typetransport():
+    return jsonify(TypeTransportSchema().dump(TypeTransport.query.all()))
+
+
+@app.route("/api/formation", methods=["GET"])
+@jwt_required()
+def get_formation():
+    return jsonify(FormationSchema().dump(Formation.query.all()))
+
+
+@app.route("/api/university", methods=["GET"])
+@jwt_required()
+def get_university():
+    return jsonify(UniversitySchema().dump(University.query.all()))
