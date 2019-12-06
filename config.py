@@ -8,6 +8,7 @@ KEY = open("key.ini").readline().replace("\n", "")
 
 class Config(object):
     SECRET_KEY = KEY
+    JWT_AUTH_URL_RULE = "/api/auth"
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
