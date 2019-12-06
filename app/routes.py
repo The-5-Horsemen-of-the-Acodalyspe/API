@@ -154,7 +154,7 @@ def set_user(user, request):
                     else:
                         setattr(user.study[0], j, int(request.json[i][j]))
                 elif j == "formation":
-                    s = Formation.query.filter_by(name=request.json[i][j]).first()
+                    s = Formation.query.filter_by(name=request.json[i][j].lower()).first()
                     if s:
                         user.study[0].formation = s
                     else:
