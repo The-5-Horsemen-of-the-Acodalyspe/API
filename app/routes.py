@@ -9,6 +9,55 @@ email_re = re.compile(r"^[a-zA-Z][\w\.]*@[A-Za-z0-9]+([_\-\.][A-Za-z0-9]+)*\.[a-
 name_re = re.compile(r"^[a-zA-Z]+([- ][a-zA-Z])*")
 
 
+def percent_calc(user):
+    if user.housing.count():
+        hp = 0
+        hp += user.housing[0].price-1*25
+        hp += 100 if user.housing[0].wholesomeness else 0
+        hp/=2
+        user.housing[0].percent = hp
+    if user.transport.count():
+        tp = 0
+        if user.transport[0].transportTime >= 30:
+            tp += user.transport[0].transportTime-30*2.7
+            tp = 100 if hp > 100 else hp
+        tp += 100 if not user.transport[0].needs_proximity else 0
+        tp /= 2
+        user.transport[0].percent = tp
+    if user.study.count():
+        sp = 100 if user.study[0].douille else 0
+        user.study[0].percent = sp
+    if user.technology.count():
+        tp = 0
+        tp += 100 if user.technology[0].hardware else 0
+        tp += 100 if user.technology[0].printer else 0
+        tp += 100 if user.technology[0].internet else 0
+        tp /= 3
+        user.technology[0].percent = tp
+    if user.finance.count():
+        fp = 0
+        fp += user.finance[0].scholarships-1/8*100
+        fp += user.finance[0].APL-1/4*100
+        fp += user.finance[0].other-1/6*100
+        fp += 100 if user.finance[0].work and fp != 0 else 0
+        fp += user.finance[0].family - 1 / 7 * 100
+        fp /= 5
+        user.finance[0].percent = fp
+    if user.handicap.count():
+        hp = 0
+        hp += 100 if user.handicap[0].handicap else 0
+        user.handicap[0].percent = hp
+    if user.family.count():
+        fp = 0
+        fp += 100 if user.family[0].death else 0
+        fp += 100 if user.family[0].divorce else 0
+        fp += 100 if user.family[0].violence else 0
+        if user.family[0].distance-50 > 0:
+            fp += 100 if user.family[0].distance-50 > 100 else user.family[0].distance-50
+        fp /= 4
+        user.family[0].percent = fp
+
+
 def set_user(user, request):
     for i in request.json:
         if i == "username":
@@ -176,7 +225,7 @@ def set_user(user, request):
                 user.university = s
             else:
                 abort(400, "Invalid university")
-
+    percent_calc(user)
 
 @app.route("/api/register", methods=["POST"])
 def register():
