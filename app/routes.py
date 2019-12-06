@@ -9,7 +9,7 @@ email_re = re.compile(r"^[a-zA-Z][\w\.]*@[A-Za-z0-9]+([_\-\.][A-Za-z0-9]+)*\.[a-
 name_re = re.compile(r"^[a-zA-Z]+([- ][a-zA-Z])*")
 
 
-@app.route("/register", methods=["POST"])
+@app.route("api/register", methods=["POST"])
 def register():
     if not request.json or not all(key in request.json for key in ["username", "password", "email", "first_name", "last_name", "age"]):
         abort(400, "Not enough arguments")
@@ -42,7 +42,7 @@ def register():
     return jsonify(UserSchema().dump(user)), 201
 
 
-@app.route("/", methods=["GET"])
+@app.route("api/", methods=["GET"])
 @jwt_required()
 def root():
     return "ok"
