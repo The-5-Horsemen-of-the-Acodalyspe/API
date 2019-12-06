@@ -39,14 +39,7 @@ def set_user(user, request):
             if not user.housing.count():
                 user.housing.append(Housing())
             for j in request.json[i]:
-                if j in ["distance", "needs_proximity"]:
-                    try:
-                        float(request.json[i][j])
-                    except ValueError:
-                        abort(400, f"Invalid {j}")
-                    else:
-                        setattr(user.housing[0], j, float(request.json[i][j]))
-                elif j == "wholesomeness":
+                if j == "wholesomeness":
                     if request.json[i][j] is True:
                         b = True
                     elif request.json[i][j] is False:
@@ -54,23 +47,50 @@ def set_user(user, request):
                     else:
                         abort(400, "Invalid wholesomeness")
                     user.housing[0].wholesomeness = b
-                elif j in ["price", "transportTime"]:
+                elif j == "price":
                     try:
                         int(request.json[i][j])
                     except ValueError:
                         abort(400, f"Invalid {j}")
                     else:
-                        setattr(user.housing[0], j, int(request.json[i][j]))
+                        user.housing[0].price = int(request.json[i][j])
                 elif j == "typeHousing":
                     s = TypeHousing.query.filter_by(name=request.json[i][j]).first()
                     if s:
                         user.housing[0].type_housing = s
                     else:
                         abort(400, "Invalid typeHousing")
+
+        elif i == "transport":
+            if not user.transport.count():
+                user.transport.append(Transport())
+            for j in request.json[i]:
+                if j == "transportTime":
+                    try:
+                        int(request.json[i][j])
+                    except ValueError:
+                        abort(400, "Invalid transportTime")
+                    else:
+                        user.transport[0].transportTime = int(request.json[i][j])
+                elif j == "distance":
+                    try:
+                        float(request.json[i][j])
+                    except ValueError:
+                        abort(400, "Invalid distance")
+                    else:
+                        user.transport[0].distance = float(request.json[i][j])
+                elif j == "needs_proximity":
+                    if request.json[i][j] is True:
+                        b = True
+                    elif request.json[i][j] is False:
+                        b = False
+                    else:
+                        abort(400, "Invalid needs_proximity")
+                        user.transport[0].needs_proximity = b
                 elif j == "typeTransport":
                     s = TypeTransport.query.filter_by(name=request.json[i][j]).first()
                     if s:
-                        user.housing[0].type_transport = s
+                        user.transport[0].type_transport = s
                     else:
                         abort(400, "Invalid typeTransport")
         elif i == "study":
@@ -94,7 +114,7 @@ def set_user(user, request):
             if not user.technology.count():
                 user.technology.append(Technology())
             for j in request.json[i]:
-                if j in ["hardware", "internet"]:
+                if j in ["hardware", "internet", "printer"]:
                     if request.json[i][j] is True:
                         b = True
                     elif request.json[i][j] is False:
@@ -106,7 +126,7 @@ def set_user(user, request):
             if not user.finance.count():
                 user.finance.append(Finance())
             for j in request.json[i]:
-                if j in ["scholarships", "APL"]:
+                if j == "work":
                     if request.json[i][j] is True:
                         b = True
                     elif request.json[i][j] is False:
@@ -114,7 +134,7 @@ def set_user(user, request):
                     else:
                         abort(400, f"Invalid {j}")
                     setattr(user.finance[0], j, b)
-                elif j in ["other", "family", "work"]:
+                elif j in ["scholarships", "APL", "other", "family"]:
                     try:
                         int(request.json[i][j])
                     except ValueError:
@@ -124,15 +144,13 @@ def set_user(user, request):
         elif i == "handicap":
             if not user.handicap.count():
                 user.handicap.append(Handicap())
-            for j in request.json[i]:
-                if j in ["physical", "mental"]:
-                    if request.json[i][j] is True:
-                        b = True
-                    elif request.json[i][j] is False:
-                        b = False
-                    else:
-                        abort(400, f"Invalid {j}")
-                    setattr(user.handicap[0], j, b)
+            if request.json[i] is True:
+                b = True
+            elif request.json[i] is False:
+                b = False
+            else:
+                abort(400, "Invalid handicap")
+            user.handicap[0].handicap = b
         elif i == "family":
             if not user.family.count():
                 user.family.append(Family())
