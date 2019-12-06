@@ -228,6 +228,32 @@ def set_user(user, request):
     percent_calc(user)
 
 
+@app.route("/api/articles", methods=["GET"])
+@jwt_required()
+def articles():
+    article = {}
+    if current_identity.housing.count():
+        article["housing"] = current_identity.housing[0].percent
+    if current_identity.transport.count():
+        article["transport"] = current_identity.transport[0].percent
+    if current_identity.study.count():
+        article["study"] = current_identity.study[0].percent
+    if current_identity.technology.count():
+        article["technology"] = current_identity.technology[0].percent
+    if current_identity.finance.count():
+        article["finance"] = current_identity.finance[0].percent
+    if current_identity.handicap.count():
+        article["handicap"] = current_identity.handicap[0].percent
+    if current_identity.family.count():
+        article["family"] = current_identity.family[0].percent
+
+    l = []
+    for i in sorted(article.keys(), key=lambda x: article[x]):
+        l.append(i)
+    l = l[::-1]
+    return jsonify(l)
+
+
 @app.route("/api/register", methods=["POST"])
 def register():
     if not request.json or not all(key in request.json for key in ["username", "password", "email", "first_name", "last_name", "age"]):
