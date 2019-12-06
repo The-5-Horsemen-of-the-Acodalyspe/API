@@ -18,6 +18,8 @@ def register():
         if i == "username":
             if len(request.json[i]) > 64:
                 abort(400, "Username too long")
+            elif User.query.filter_by(username=request.json[i]).all():
+                abort(400, "Username already in use")
             user.username = request.json[i]
         elif i == "password":
             user.password = generate_password_hash(request.json[i])
