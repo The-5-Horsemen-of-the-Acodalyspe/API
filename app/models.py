@@ -32,8 +32,8 @@ class Housing(db.Model):
     price = db.Column(db.Integer)
     wholesomeness = db.Column(db.Boolean)
     transportTime = db.Column(db.Integer)
-    distance = db.Column(db.Integer)
-    needs_proximity = db.Column(db.Integer)
+    distance = db.Column(db.Float)
+    needs_proximity = db.Column(db.Float)
 
     def __repr__(self):
         return f"<Housing {self.id}>"
